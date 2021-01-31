@@ -75,6 +75,8 @@ def setnewepisode(id, newepisode):
     seriec = c.execute("SELECT * FROM series WHERE id = "+str(id))
     serie =  list(seriec.fetchall())
     print(serie)
+    conn.commit()
+    conn.close()
 
 
 def setnewseason(id,nseason):
@@ -86,6 +88,8 @@ def setnewseason(id,nseason):
     seriec = c.execute("SELECT * FROM series WHERE id = "+str(id))
     serie =  list(seriec.fetchall())
     print(serie)
+    conn.commit()
+    conn.close()
 
 def finalizeserie(id):
     conn = sqlite3.connect('rhapsodic.db')
@@ -96,6 +100,8 @@ def finalizeserie(id):
     seriec = c.execute("SELECT * FROM series WHERE id = "+str(id))
     serie =  list(seriec.fetchall())
     print(serie)
+    conn.commit()
+    conn.close()
 
 
 '''conn = sqlite3.connect('rhapsodic.db')
