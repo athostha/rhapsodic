@@ -6,7 +6,9 @@ import time
 import sys
 
 def __init__():
-    path = './series/'
+    dir = os.path.dirname(__file__)
+    path = dir + '/series/'
+    print(path)
     dbhelper.__init__()
     series = os.listdir(path)
     for serie in series:
@@ -37,7 +39,8 @@ def selector():
     return dbhelper.getserie(selectedseries[0])
 
 def sorter(serie):
-    path = './series/' + serie[0][1] + '/'
+    dir = os.path.dirname(__file__)
+    path = dir + '/series/' + serie[0][1] + '/'
     if serie[0][2] == 1:
         episodes = sorted(os.listdir(path))
         episode = episodes[serie[0][5]-1]
