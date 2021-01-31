@@ -55,11 +55,12 @@ def sorter(serie):
     return ep, serie, episodes
 
 def player(ep,serie):
-    output = subprocess.run(["ffplay", "-autoexit", "-ss", str(serie[0][6]), ep],
+    output = subprocess.run(["mplayer", "-ss", str(serie[0][6]), ep],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT)
-    output = output.stdout.decode().splitlines()[-1]
-    currenttime = output[:output.find(" A-V")].strip()
+    output = output.stdout.decode().splitlines()[-3]
+    print(output)
+    currenttime = output[2:output.find("V:")].strip()
     totallength = subprocess.run(['ffprobe', '-v' , 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', ep],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT)
