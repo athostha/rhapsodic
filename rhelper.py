@@ -58,8 +58,13 @@ def player(ep,serie):
     output = subprocess.run(["mplayer", "-ss", str(serie[0][6]), ep],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT)
-    output = output.stdout.decode().splitlines()[-3]
-    print(output)
+    uncodedtime = output.stdout.decode().splitlines()[-3]
+    if "=====  PAUSE  =====" in uncodedtime:
+        uncodedtime = output.stdout.decode().splitlines()[-4]
+    if uncodedtime == "":
+        uncodedtime = output.stdout.decode().splitlines()[-4]
+    print(uncodedtime)
+    output = uncodedtime
     currenttime = output[2:output.find("V:")].strip()
     totallength = subprocess.run(['ffprobe', '-v' , 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', ep],
         stdout=subprocess.PIPE,
