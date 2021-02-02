@@ -19,13 +19,13 @@ def __init__():
             mseasons = os.path.isdir(spath + subs[0])
             if mseasons:
                 nseasons = len(subs)
-                nepisodes = 0
+                nepisode = 0
                 for sub in subs:
-                    nepisodes += len(os.listdir(spath + sub))
+                    nepisode += len(os.listdir(spath + sub))
             else:
-                nepisodes = len(subs)
+                nepisode = len(subs)
                 nseasons = 1
-            dbhelper.setserie(serie, nseasons, nepisodes)
+            dbhelper.setserie(serie, nseasons, nepisode)
 
 def selector():
     number, tepisodes = dbhelper.getepisodenumber()
@@ -77,7 +77,7 @@ def save(episodes, ctime, ttime, serie):
     ctime = float(ctime)
     if ctime >= ttime-20.0:
         nepisode = serie[0][5] + 1
-        if nepisodes <= len(episodes):
+        if nepisode <= len(episodes):
             dbhelper.setnewepisode(serie[0][0], nepisode)
         else:
 #new season of finish the series
