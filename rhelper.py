@@ -58,11 +58,9 @@ def player(ep,serie):
     output = subprocess.run(["mplayer", "-ss", str(serie[0][6]), ep],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT)
-    uncodedtime = output.stdout.decode().splitlines()[-3]
-    if "=====  PAUSE  =====" in uncodedtime:
-        uncodedtime = output.stdout.decode().splitlines()[-4]
-    if uncodedtime == "":
-        uncodedtime = output.stdout.decode().splitlines()[-4]
+    for i in range(1,99):
+        uncodedtime = output.stdout.decode().splitlines()[-i]
+        if "A-V:" in uncodedtime: break
     print(uncodedtime)
     output = uncodedtime
     currenttime = output[2:output.find("V:")].strip()
