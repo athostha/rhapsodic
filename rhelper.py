@@ -28,11 +28,11 @@ def __init__():
             dbhelper.setserie(serie, nseasons, nepisode)
 
 def selector():
-    number, tepisodes = dbhelper.getepisodenumber()
-    brute = random.randint(1, tepisodes)
+    number, tepisodes, twatch = dbhelper.getepisodenumber()
+    brute = random.randint(1, tepisodes-twatch)
     n = 0
     for num in number:
-        n += num[1]
+        n += num[1] - num[2]
         if n >= brute:
             selectedseries = num
             break
@@ -60,7 +60,8 @@ def player(ep,serie):
         stderr=subprocess.STDOUT)
     for i in range(1,99):
         uncodedtime = output.stdout.decode().splitlines()[-i]
-        if "A-V:" in uncodedtime: break
+        if "A-V" in uncodedtime: break
+    print(uncodedtime)
     ut = uncodedtime[3:uncodedtime.find("(")].replace(" ", "")
     print(ut)
     currenttime = 3600*(int(ut[:2])) + 60*(int(ut[3:5])) + int(ut[6:8])
