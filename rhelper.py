@@ -8,7 +8,6 @@ import sys
 def __init__():
     dir = os.path.dirname(__file__)
     path = dir + '/series/'
-    print(path)
     dbhelper.__init__()
     series = os.listdir(path)
     for serie in series:
@@ -61,7 +60,8 @@ def player(ep,serie):
     for i in range(1,99):
         uncodedtime = output.stdout.decode().splitlines()[-i]
         if "A-V" in uncodedtime: break
-    print(uncodedtime)
+    if "(Paused)" in uncodedtime:
+        uncodedtime = uncodedtime[9:]
     ut = uncodedtime[3:uncodedtime.find("(")].replace(" ", "")
     print(ut)
     currenttime = 3600*(int(ut[:2])) + 60*(int(ut[3:5])) + int(ut[6:8])
@@ -77,7 +77,7 @@ def save(episodes, ctime, ttime, serie):
             dbhelper.setnewepisode(serie[0][0], nepisode)
         else:
 #new season of finish the series
-            if serie[0][2] < serie[0][4]:
+            if serie[0][2] > serie[0][4]:
                 dbhelper.setnewseason(serie[0][0], serie[0][4]+1)
                 dbhelper.setnewepisode(serie[0][0], 1)
             else:
