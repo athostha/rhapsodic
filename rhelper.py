@@ -54,6 +54,7 @@ def sorter(serie):
     return ep, serie, episodes
 
 def player(ep,serie):
+    print(serie)
     output = subprocess.run(["mpv", "-ss", str(serie[0][6]), ep],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT)
@@ -76,7 +77,7 @@ def save(episodes, ctime, ttime, serie):
         if nepisode <= len(episodes):
             dbhelper.setnewepisode(serie[0][0], nepisode)
         else:
-#new season of finish the series
+#new season or finish the series
             if serie[0][2] > serie[0][4]:
                 dbhelper.setnewseason(serie[0][0], serie[0][4]+1)
                 dbhelper.setnewepisode(serie[0][0], 1)
