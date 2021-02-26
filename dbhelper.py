@@ -39,8 +39,9 @@ def getserie(name):
     dir = os.path.dirname(__file__)
     conn = sqlite3.connect(dir+'/rhapsodic.db')
     c = conn.cursor()
-    seriec = c.execute("SELECT * FROM series WHERE name='"+name+"' AND finished=0")
-    serie =  list(seriec.fetchall())
+    chamado = "SELECT * FROM series WHERE name='"+name+"' AND finished=0"
+    serie1 = c.execute(chamado)
+    serie =  list(serie1.fetchall())
     conn.close()
     return serie
 

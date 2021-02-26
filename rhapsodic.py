@@ -1,7 +1,31 @@
 import rhelper
 import sys
+import dbhelper
+import os
+
+def __init__():
+    dir = os.path.dirname(__file__)
+    path = dir + '/series/'
+    dbhelper.__init__()
+    series = os.listdir(path)
+    for serie in series:
+        spath = path + serie + '/'
+        seriestats = dbhelper.getserie(serie)
+        if len(seriestats) == 0:
+            subs = os.listdir(spath)
+            mseasons = os.path.isdir(spath + subs[0])
+            if mseasons:
+                nseasons = len(subs)
+                nepisode = 0
+                for sub in subs:
+                    nepisode += len(os.listdir(spath + sub))
+            else:
+                nepisode = len(subs)
+                nseasons = 1
+            dbhelper.setserie(serie, nseasons, nepisode)
 
 def main():
+    __init__()
     script = sys.argv
     num = repetition(script)
     for i in range(0,num):
