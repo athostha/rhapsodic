@@ -20,23 +20,23 @@ def selector():
 
 def sorter(serie):
     dir = os.path.dirname(__file__)
-    path = dir + '/series/' + serie[0][1] + '/'
-    if serie[0][2] == 1:
+    path = dir + '/series/' + serie[0]['name'] + '/'
+    if serie[0]['nseasons'] == 1:
         episodes = sorted(os.listdir(path))
-        episode = episodes[serie[0][5]-1]
+        episode = episodes[serie[0]["currentepisode"]-1]
         ep = path + episode
     else:
         seasons = sorted(os.listdir(path))
-        season = seasons[serie[0][4]-1]
+        season = seasons[serie[0]["currentseason"]-1]
         seasonpath = path + season + '/'
         episodes = sorted(os.listdir(seasonpath))
-        episode = episodes[serie[0][5]-1]
+        episode = episodes[serie[0]["currentepisode"]-1]
         ep = seasonpath + episode
     return ep, serie, episodes
 
 def player(ep,serie):
     print(serie)
-    output = subprocess.run(["mpv", "-ss", str(serie[0][6]), ep],
+    output = subprocess.run(["mpv", "-ss", str(serie[0]['timestamp']), ep],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT)
     for i in range(1,99):
@@ -54,16 +54,16 @@ def save(episodes, ctime, ttime, serie):
     ttime = float(ttime)
     ctime = float(ctime)
     if ctime >= ttime-20.0:
-        nepisode = serie[0][5] + 1
+        nepisode = serie[0]["currentepisode"] + 1
         if nepisode <= len(episodes):
-            dbhelper.setnewepisode(serie[0][0], nepisode)
+            dbhelper.setnewepisode(serie[0]['id'], nepisode)
         else:
 #new season or finish the series
             if serie[0][2] > serie[0][4]:
-                dbhelper.setnewseason(serie[0][0], serie[0][4]+1)
-                dbhelper.setnewepisode(serie[0][0], 1)
+                dbhelper.setnewseason(serie[0]['id'], serie[0][4]+1)
+                dbhelper.setnewepisode(serie[0]['id'], 1)
             else:
-                dbhelper.finalizeserie(serie[0][0])
+                dbhelper.finalizeserie(serie[0]['id'])
 
     else:
-        dbhelper.setnewtimestamp(serie[0][0], ctime)
+        dbhelper.setnewtimestamp(serie[0]['id'], ctime)
