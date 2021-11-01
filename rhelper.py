@@ -4,6 +4,7 @@ import random
 import subprocess
 import time
 import sys
+import re
 
 
 def selector():
@@ -43,10 +44,10 @@ def player(ep,serie):
         if "A-V" in uncodedtime: break
     if "(Paused)" in uncodedtime:
         uncodedtime = uncodedtime[9:]
-    ut = uncodedtime[3:uncodedtime.find("(")].replace(" ", "")
+    ut = re.findall(r'[0-1]{0,1}[0-9]{1,2}:[0-5][0-9]:[0-5][0-9]', uncodedtime)
     print(ut)
-    currenttime = 3600*(int(ut[:2])) + 60*(int(ut[3:5])) + int(ut[6:8])
-    totallength = 3600*(int(ut[9:11])) + 60*(int(ut[12:14])) + int(ut[15:17])
+    currenttime = 3600*(int(ut[0][:2])) + 60*(int(ut[0][3:5])) + int(ut[0][6:8])
+    totallength = 3600*(int(ut[1][:2])) + 60*(int(ut[1][3:5])) + int(ut[1][6:8])
     return currenttime, totallength
 
 def save(episodes, ctime, ttime, serie):
