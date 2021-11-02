@@ -35,7 +35,8 @@ def sorter(serie):
     return ep, serie, episodes
 
 def player(ep,serie):
-    print(serie)
+    print(str(serie[0]['id']) , serie[0]['name'])
+    print('S{:02d}E{:02d}'.format(serie[0]['currentseason'], serie[0]['currentepisode']))
     output = subprocess.run(["mpv", "-ss", str(serie[0]['timestamp']), ep],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT)
@@ -67,3 +68,15 @@ def save(episodes, ctime, ttime, serie):
 
     else:
         dbhelper.setnewtimestamp(serie[0]['id'], ctime)
+
+def listing():
+    listing = dbhelper.fromfile()
+    counter = 0
+    for serie in listing:
+        print("{:03d} |{:^40} | S{:02d}E{:02d}".format(counter, serie['name'],serie['currentseason'], serie['currentepisode']))
+        counter +=1
+
+def this(id):
+    serie = dbhelper.fromfile()
+    serie[id]['id'] = id
+    return sorter([serie[id]])

@@ -8,6 +8,7 @@ def __init__():
     if not fileexists:
         createdb()
 
+
 def checkfile():
     try:
         dir = os.path.dirname(__file__)
@@ -22,11 +23,9 @@ def createdb():
     with open(dir+'/rhapsodic.json',  'w') as f:
         json.dump("[]",f)
 
+
 def setserie(name, nseasons, nepisodes):
-    dir = os.path.dirname(__file__)
-    with open(dir+'/rhapsodic.json') as fin:
-        jfin = json.load(fin)
-        jfile = json.loads(jfin)
+    jfile = fromfile()
     jfile.append({
         "name":name,
         "nseasons":nseasons,
@@ -37,78 +36,64 @@ def setserie(name, nseasons, nepisodes):
         "finished":0,
         "watchedepisodes":0
         })
-    fjson = json.dumps(jfile)
-    with open(dir+'/rhapsodic.json', 'w') as fout:
-        json.dump(fjson, fout)
+    tofile(id, jfile)
+
 
 def getserie(name):
-    dir = os.path.dirname(__file__)
-    with open(dir+'/rhapsodic.json') as fin:
-        jfile = json.load(fin)
-        jlist  = json.loads(jfile)
-        serie = list(filter(lambda serie: serie['name'] == name, jlist))
-        try:
-            serie[0]['id'] = jlist.index(serie[0])
-        except IndexError:
-            serie = []
+    jfile = fromfile()
+    serie = list(filter(lambda serie: serie['name'] == name, jfile))
+    try:
+        serie[0]['id'] = jfile.index(serie[0])
+    except IndexError:
+        serie = []
     return serie
 
 
 def getepisodenumber():
-    dir = os.path.dirname(__file__)
-    with open(dir+'/rhapsodic.json') as fin:
-        jfile = json.load(fin)
-        jlist  = json.loads(jfile)
+    jfile = fromfile()
     series = []
     totalepisodes = 0
     watchedepisodes = 0
-    for serie in jlist:
+    for serie in jfile:
         series.append([serie['name'],serie['nepisodes'],serie['currentepisode']])
         totalepisodes += serie['nepisodes']
         watchedepisodes += serie['currentepisode']
     return series, totalepisodes, watchedepisodes
 
 
-
-
-
 def setnewtimestamp(id, ntt):
-    dir = os.path.dirname(__file__)
-    with open(dir+'/rhapsodic.json') as fin:
-        jfin = json.load(fin)
-        jfile = json.loads(jfin)
+    jfile = fromfile()
     jfile[id]['timestamp'] = ntt
-    fjson = json.dumps(jfile)
-    with open(dir+'/rhapsodic.json', 'w') as fout:
-        json.dump(fjson, fout)
+    tofile(id, jfile)
 
 
 def setnewepisode(id, newepisode):
-    dir = os.path.dirname(__file__)
-    with open(dir+'/rhapsodic.json') as fin:
-        jfin = json.load(fin)
-        jfile = json.loads(jfin)
+    jfile = fromfile()
     jfile[id]['currentepisode'] = newepisode
-    fjson = json.dumps(jfile)
-    with open(dir+'/rhapsodic.json', 'w') as fout:
-        json.dump(fjson, fout)
+    tofile(id, jfile)
+    setnewtimestamp(id, 0)
+
 
 def setnewseason(id,nseason):
-    dir = os.path.dirname(__file__)
-    with open(dir+'/rhapsodic.json') as fin:
-        jfin = json.load(fin)
-        jfile = json.loads(jfin)
+    jfile = fromfile()
     jfile[id]['currentseason'] = nseason
-    fjson = json.dumps(jfile)
-    with open(dir+'/rhapsodic.json', 'w') as fout:
-        json.dump(fjson, fout)
+    tofile(id, jfile)
+
 
 def finalizeserie(id):
+    jfile = fromfile()
+    jfile[id]['finished'] = 1
+    tofile(id, jfile)
+
+
+def tofile(id, jfile):
+    dir = os.path.dirname(__file__)
+    with open(dir+'/rhapsodic.json', 'w') as fout:
+        json.dump(jfile, fout, indent=2)
+
+
+def fromfile():
     dir = os.path.dirname(__file__)
     with open(dir+'/rhapsodic.json') as fin:
-        jfin = json.load(fin)
-        jfile = json.loads(jfin)
-    jfile[id]['finished'] = 1
-    fjson = json.dumps(jfile)
-    with open(dir+'/rhapsodic.json', 'w') as fout:
-        json.dump(fjson, fout)
+        jfile = json.load(fin)
+    return jfile

@@ -28,6 +28,17 @@ def main():
     __init__()
     script = sys.argv
     num = repetition(script)
+    if '-l' in script: 
+        rhelper.listing()
+        num = 0
+
+    if '-t' in script: 
+        id = int(script[2])
+        ep, serie, episodes = rhelper.this(id)
+        ctime, ttime =  rhelper.player(ep, serie)
+        rhelper.save(episodes, ctime, ttime, serie)
+        num = 0
+
     for i in range(0,num):
         ep, serie, episodes = rhelper.sorter(rhelper.selector())
         ctime, ttime =  rhelper.player(ep, serie)
